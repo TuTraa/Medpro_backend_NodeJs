@@ -4,7 +4,8 @@ import userController from "../controllers/userController";
 import doctorController from "../controllers/doctorController";
 import patientController from "../controllers/patientController";
 import specialtyController from "../controllers/specialtyController";
-import clinicController from "../controllers/clinicController"
+import clinicController from "../controllers/clinicController";
+import doctorControllerHistory from "../controllers/doctorControllerHistory";
 
 let router = express.Router();
 let initWebRoutes = (app) => {
@@ -39,8 +40,36 @@ let initWebRoutes = (app) => {
 
   //infor schedule 
   router.get("/api/get-list-patient-for-doctor", doctorController.getListPatientForDoctor)
+
+
+  //Nowww-------------------------------
+  // infor data xamtruction cancel
+  router.get("/api/get-list-patient-for-doctor-cancel", doctorController.getListPatientForDoctorCancel)
+  // infor data xamtruction done
+  router.get("/api/get-list-patient-for-doctor-done", doctorController.getListPatientForDoctorDone)
+  // infor data xamtruction not come
+  router.get("/api/get-list-patient-for-doctor-notCome", doctorController.getListPatientForDoctorNotCome)
+  // infor data xamtruction is Active
+  router.get("/api/get-list-patient-for-doctor-isActive", doctorController.getListPatientForDoctorIsActive)
   // infor data xamtruction waiting S0
   router.get("/api/get-list-patient-for-doctor-S0", doctorController.getListPatientForDoctorS0)
+
+
+  //history-------------------------------
+  // infor data xamtruction cancel
+  router.get("/api/get-list-patient-for-doctor-cancel-history", doctorControllerHistory.getListPatientForDoctorCancelHistory)
+  // infor data xamtruction done
+  router.get("/api/get-list-patient-for-doctor-done-history", doctorControllerHistory.getListPatientForDoctorDoneHistory)
+  // infor data xamtruction not come
+  router.get("/api/get-list-patient-for-doctor-notCome-history", doctorControllerHistory.getListPatientForDoctorNotComeHistory)
+  // infor data xamtruction is Active
+  router.get("/api/get-list-patient-for-doctor-isActive-history", doctorControllerHistory.getListPatientForDoctorIsActiveHistory)
+  // infor data xamtruction waiting S0
+  router.get("/api/get-list-patient-for-doctor-S0-history", doctorControllerHistory.getListPatientForDoctorS0History)
+
+
+
+
   router.post("/api/send-remedy", doctorController.sendRemedy)
 
   //apopointment

@@ -143,7 +143,67 @@ let getListPatientForDoctor = async (req, res) => {
 }
 let getListPatientForDoctorS0 = async (req, res) => {
     try {
-        let data = await doctorService.getListPatientForDoctorServiceS0(req.query.doctorId, req.query.dataTime);
+        let data = await doctorService.getListPatientForDoctorServiceS0(req.query.doctorId, req.query.dataTime, "S0", req.query.phone);
+        return res.status(200).json(
+            data
+        )
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            message: 'error from server'
+        })
+    }
+}
+let getListPatientForDoctorCancel = async (req, res) => {
+    try {
+        let data = await doctorService.getListPatientForDoctorServiceS0(req.query.doctorId, req.query.dataTime, "S4", req.query.phone);
+        return res.status(200).json(
+            data
+        )
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            message: 'error from server'
+        })
+    }
+}
+let getListPatientForDoctorDone = async (req, res) => {
+    try {
+        let data = await doctorService.getListPatientForDoctorServiceS0(req.query.doctorId, req.query.dataTime, "S3", req.query.phone);
+        return res.status(200).json(
+            data
+        )
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            message: 'error from server'
+        })
+    }
+}
+let getListPatientForDoctorNotCome = async (req, res) => {
+    try {
+        let data = await doctorService.getListPatientForDoctorServiceS0(req.query.doctorId, req.query.dataTime, "S1", req.query.phone);
+        return res.status(200).json(
+            data
+        )
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            message: 'error from server'
+        })
+    }
+}
+let getListPatientForDoctorIsActive = async (req, res) => {
+    try {
+        let data = await doctorService.getListPatientForDoctorServiceS0(req.query.doctorId, req.query.dataTime, "S2", req.query.phone);
         return res.status(200).json(
             data
         )
@@ -186,5 +246,7 @@ module.exports = {
     getExtraInforDoctorById: getExtraInforDoctorById,
     getProfileDoctorById: getProfileDoctorById,
     getListPatientForDoctor, sendRemedy,
-    getListPatientForDoctorS0
+    getListPatientForDoctorS0, getListPatientForDoctorCancel,
+    getListPatientForDoctorDone, getListPatientForDoctorNotCome,
+    getListPatientForDoctorIsActive,
 }

@@ -44,15 +44,14 @@ let postBookingApointment = (data) => {
                         firstName: data.fullName,
                     }
                 });
-                resolve({
-                    errCode: 0,
-                    errMessage: "save infor patient success!"
-                })
-                if (user && user[0]) {
 
+                if (user && user[0]) {
+                    console.log(1);
                     await db.Booking.findOrCreate({
                         where: {
                             patientId: user[0].id,
+                            statusId: 'S2',
+                            doctorId: data.doctorId,
                         },
                         defaults: {
                             statusId: 'S00',
@@ -65,6 +64,10 @@ let postBookingApointment = (data) => {
                         }
                     })
                 }
+                resolve({
+                    errCode: 0,
+                    errMessage: "save infor patient success!"
+                })
             }
         } catch (e) {
             reject(e);

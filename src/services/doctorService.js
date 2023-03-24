@@ -1,6 +1,8 @@
 import db from "../models/index";
 import _ from "lodash";
-import emailService from "../services/emailService"
+import emailService from "../services/emailService";
+const { Op } = require('sequelize');
+import moment from 'moment/moment';
 
 require('dotenv').config();
 
@@ -447,27 +449,56 @@ let getListPatientForDoctorService = (doctorId, dataTime) => {
         }
     })
 }
-let getListPatientForDoctorServiceS0 = (doctorId, dataTime) => {
+let getListPatientForDoctorServiceS0 = (doctorId, dataTime, statusId, phone, history) => {
+    console.log(history);
     return new Promise(async (resolve, reject) => {
         try {
-            if (!doctorId && !dataTime) {
+            if (!doctorId || !dataTime || !statusId) {
                 resolve({
                     errCode: -1,
                     errMessage: 'missing parameter',
                 })
             }
             else {
-                let objectFind = { statusId: 'S0' };
-                if (doctorId === 'All' && dataTime !== 'All') {
+                let yesterday = moment(new Date()).add(-1, 'days').startOf('day').valueOf();
+                let today = moment(new Date()).startOf('day').valueOf();
+                let patient = '';
+                let objectFind = {
+                    statusId: statusId,
+                    date: {
+                        [Op.gt]: yesterday,
+                    }
+                };
+                if (history) {
+                    console.log(2);
+                    objectFind.date = {
+                        [Op.lt]: today,
+                    }
+                }
+                if (dataTime !== 'All') {
                     objectFind.date = dataTime
                 }
-                if (doctorId !== 'All' && dataTime === 'All') {
+                if (doctorId !== 'All') {
                     objectFind.doctorId = doctorId
                 }
-                if (doctorId !== 'All' && dataTime !== 'All') {
-                    objectFind.date = dataTime;
-                    objectFind.doctorId = doctorId
+                if (phone) {
+                    console.log(1)
+                    patient = await db.User.findOne({
+                        where: {
+                            phoneNumber: phone,
+                        },
+                        attributes: ['id']
+                    })
+                    if (patient && patient.id) {
+                        objectFind.patientId = patient.id;
+                    }
+                    if (!patient || !patient.id) {
+                        objectFind.patientId = 'noId';
+                    }
                 }
+
+
+
                 let allScheduleForDoctor = await db.Booking.findAll({
                     where: objectFind
                     ,
