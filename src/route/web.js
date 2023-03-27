@@ -32,6 +32,7 @@ let initWebRoutes = (app) => {
   router.post("/api/save-infor-doctor", doctorController.saveInforDoctor);
   router.get("/api/get-detail-doctor-by-id", doctorController.getDetailDoctorById);
   router.post('/api/bulk-create-schedule', doctorController.bulkCreateSchedule);
+  router.post('/api/bulk-delete-schedule', doctorController.bulkDeleteSchedule);
   router.get("/api/get-Schedule-byDate", doctorController.getScheduleByDate);
   //get data detail doctor infor
   router.get("/api/get-extra-inforDoctor-byId", doctorController.getExtraInforDoctorById);
@@ -53,6 +54,8 @@ let initWebRoutes = (app) => {
   router.get("/api/get-list-patient-for-doctor-isActive", doctorController.getListPatientForDoctorIsActive)
   // infor data xamtruction waiting S0
   router.get("/api/get-list-patient-for-doctor-S0", doctorController.getListPatientForDoctorS0)
+  // infor data xamtruction change
+  router.get("/api/get-list-patient-for-doctor-change", doctorController.getListPatientForDoctorChange)
 
 
   //history-------------------------------
@@ -66,6 +69,8 @@ let initWebRoutes = (app) => {
   router.get("/api/get-list-patient-for-doctor-isActive-history", doctorControllerHistory.getListPatientForDoctorIsActiveHistory)
   // infor data xamtruction waiting S0
   router.get("/api/get-list-patient-for-doctor-S0-history", doctorControllerHistory.getListPatientForDoctorS0History)
+  // infor data xamtruction waiting S0
+  router.get("/api/get-list-patient-for-doctor-change-history", doctorControllerHistory.getListPatientForDoctorChangeHistory)
 
 
 

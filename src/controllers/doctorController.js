@@ -79,6 +79,22 @@ let bulkCreateSchedule = async (req, res) => {
         })
     }
 }
+let bulkDeleteSchedule = async (req, res) => {
+    try {
+        let infor = await doctorService.bulkDeleteSchedule(req.body);
+        return res.status(200).json(
+            infor
+        )
+
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            message: 'error from the sever'
+        })
+    }
+}
 let getScheduleByDate = async (req, res) => {
     try {
         let infor = await doctorService.getScheduleByDate(req.query.doctorId, req.query.date);
@@ -216,6 +232,21 @@ let getListPatientForDoctorIsActive = async (req, res) => {
         })
     }
 }
+let getListPatientForDoctorChange = async (req, res) => {
+    try {
+        let data = await doctorService.getListPatientForDoctorServiceS0(req.query.doctorId, req.query.dataTime, "S5", req.query.phone);
+        return res.status(200).json(
+            data
+        )
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            message: 'error from server'
+        })
+    }
+}
 
 
 //send email then finish 
@@ -248,5 +279,6 @@ module.exports = {
     getListPatientForDoctor, sendRemedy,
     getListPatientForDoctorS0, getListPatientForDoctorCancel,
     getListPatientForDoctorDone, getListPatientForDoctorNotCome,
-    getListPatientForDoctorIsActive,
+    getListPatientForDoctorIsActive, getListPatientForDoctorChange,
+    bulkDeleteSchedule
 }

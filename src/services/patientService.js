@@ -46,7 +46,6 @@ let postBookingApointment = (data) => {
                 });
 
                 if (user && user[0]) {
-                    console.log(1);
                     await db.Booking.findOrCreate({
                         where: {
                             patientId: user[0].id,

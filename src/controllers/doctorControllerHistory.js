@@ -76,6 +76,21 @@ let getListPatientForDoctorIsActiveHistory = async (req, res) => {
         })
     }
 }
+let getListPatientForDoctorChangeHistory = async (req, res) => {
+    try {
+        let data = await doctorService.getListPatientForDoctorServiceS0(req.query.doctorId, req.query.dataTime, "S5", req.query.phone, 1);
+        return res.status(200).json(
+            data
+        )
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            message: 'error from server'
+        })
+    }
+}
 
 
 
@@ -83,5 +98,5 @@ let getListPatientForDoctorIsActiveHistory = async (req, res) => {
 module.exports = {
     getListPatientForDoctorS0History, getListPatientForDoctorCancelHistory,
     getListPatientForDoctorDoneHistory, getListPatientForDoctorNotComeHistory,
-    getListPatientForDoctorIsActiveHistory,
+    getListPatientForDoctorIsActiveHistory, getListPatientForDoctorChangeHistory
 }

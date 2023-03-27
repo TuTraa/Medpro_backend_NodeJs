@@ -3,6 +3,7 @@ import _ from "lodash";
 import emailService from "../services/emailService";
 const { Op } = require('sequelize');
 import moment from 'moment/moment';
+// const Schedule = require('./scheduleDelete.js');
 
 require('dotenv').config();
 
@@ -72,7 +73,6 @@ let checkRequireInforDoctor = (data) => {
             check.element = arrdata[i];
         }
     }
-    console.log
     return check;
 }
 
@@ -223,30 +223,70 @@ let bulkCreateSchedule = (data) => {
                         return item;
                     })
                 }
-                // console.log('data service:', schedule);
-
-
                 //convert date
                 let existing = await db.Schedule.findAll({
                     where: { doctorId: data.doctorId, date: data.date },
                     attributes: ['timeType', 'date', 'doctorId', 'maxNumber']
                 });
-                // if (existing && existing.length > 0) {
-                //     existing = existing.map(item => {
-                //         item.date = new Date(item.date).getTime();
-                //         return item;
-                //     })
-                // }
-                // console.log('shedule', schedule, 'exis', existing)
-                //compare differnt
                 let toCreate = _.differenceWith(schedule, existing, (a, b) => {
                     return a.timeType === b.timeType && +a.date === +b.date;
                 });
-
                 //create data
                 if (toCreate && toCreate.length > 0) {
                     await db.Schedule.bulkCreate(toCreate);
+                    // await db.Schedule.bulk;
                 }
+                resolve({
+                    errCode: 0,
+                    errMessage: 'oke'
+                })
+            }
+
+        }
+        catch (e) {
+            reject(e);
+        }
+    })
+}
+let bulkDeleteSchedule = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.arrSchedule || !data.doctorId || !data.date) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'missing required param!',
+                })
+            }
+            else {
+                let schedule = data.arrSchedule;
+                // console.log('sceduledelete:', schedule)
+                // if (schedule && schedule.length > 0) {
+
+                //     schedule = schedule.map(item => {
+                //         item.maxNumber = MAX_NUMBER_SCHEDULE;
+                //         return item;
+                //     })
+                // }
+                //convert date
+                // let existing = await db.Schedule.findAll({
+                //     where: { doctorId: data.doctorId, date: data.date },
+                //     attributes: ['timeType', 'date', 'doctorId', 'maxNumber']
+                // });
+                // let toCreate = _.differenceWith(schedule, existing, (a, b) => {
+                //     return a.timeType === b.timeType && +a.date === +b.date;
+                // });
+                // console.log(toCreate)
+                //create data
+                schedule.forEach(async (element) => {
+                    await db.Schedule.destroy({
+                        where: {
+                            doctorId: element.doctorId,
+                            date: element.date,
+                            timeType: element.timeType,
+                        }
+                    });
+                });
+
                 resolve({
                     errCode: 0,
                     errMessage: 'oke'
@@ -450,7 +490,6 @@ let getListPatientForDoctorService = (doctorId, dataTime) => {
     })
 }
 let getListPatientForDoctorServiceS0 = (doctorId, dataTime, statusId, phone, history) => {
-    console.log(history);
     return new Promise(async (resolve, reject) => {
         try {
             if (!doctorId || !dataTime || !statusId) {
@@ -470,7 +509,6 @@ let getListPatientForDoctorServiceS0 = (doctorId, dataTime, statusId, phone, his
                     }
                 };
                 if (history) {
-                    console.log(2);
                     objectFind.date = {
                         [Op.lt]: today,
                     }
@@ -482,7 +520,6 @@ let getListPatientForDoctorServiceS0 = (doctorId, dataTime, statusId, phone, his
                     objectFind.doctorId = doctorId
                 }
                 if (phone) {
-                    console.log(1)
                     patient = await db.User.findOne({
                         where: {
                             phoneNumber: phone,
@@ -595,5 +632,5 @@ module.exports = {
     getExtraInforDoctorById: getExtraInforDoctorById,
     getProfileDoctorById: getProfileDoctorById,
     getListPatientForDoctorService: getListPatientForDoctorService,
-    sendRemedy, getListPatientForDoctorServiceS0
+    sendRemedy, getListPatientForDoctorServiceS0, bulkDeleteSchedule
 }

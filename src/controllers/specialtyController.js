@@ -1,7 +1,6 @@
 import specialtyService from "../services/specialtyService"
 let createSpecialty = async (req, res) => {
     try {
-        console.log('body', req.body)
         let data = await specialtyService.createSpecialty(req.body);
         return res.status(200).json(
             data

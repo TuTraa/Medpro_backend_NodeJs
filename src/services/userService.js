@@ -166,13 +166,11 @@ let updateUserData = (data) => {
           errMessage: "dont have Id",
         });
       }
-      console.log(data)
       let user = await db.User.findOne({
         where: { id: data.id },
         raw: false,
       });
       if (user) {
-        console.log(user)
         user.firstName = data.firstName;
         user.lastName = data.lastName;
         user.phoneNumber = data.phoneNumber;
