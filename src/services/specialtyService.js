@@ -30,6 +30,8 @@ let createSpecialty = (data) => {
     })
 }
 
+
+
 let getAllSpecialty = () => {
     return new Promise(async (resolve, reject) => {
         try {

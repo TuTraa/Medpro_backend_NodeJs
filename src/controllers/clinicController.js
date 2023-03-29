@@ -48,10 +48,39 @@ let getDetailClinicById = async (req, res) => {
     }
 }
 
-
+let deleteClinic = async (req, res) => {
+    try {
+        let data = await clinicService.deleteClinicService(req.body.id);
+        return res.status(200).json({
+            data
+        })
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'error from server !',
+        })
+    }
+}
+let editClinic = async (req, res) => {
+    try {
+        let data = await clinicService.editClinicService(req.body);
+        return res.status(200).json({
+            data
+        })
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'error from server!',
+        })
+    }
+}
 module.exports = {
     createClinic: createClinic,
     getAllClinic: getAllClinic,
     getDetailClinicById: getDetailClinicById,
-
+    deleteClinic, editClinic
 }

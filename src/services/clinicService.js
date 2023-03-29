@@ -92,9 +92,78 @@ let getAllClinicService = () => {
         }
     })
 }
+let deleteClinicService = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let clinic = await db.Clinic.findOne({
+                where: {
+                    id: id,
+                }
+            })
+            if (!clinic) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'clinic not exist!',
+                })
+            }
+            else {
+                await db.Clinic.destroy({
+                    where: {
+                        id: id
+                    }
+                })
+                resolve({
+                    errCode: 0,
+                    errMessage: 'delete success!'
+                })
+            }
+        }
+        catch (e) {
+            reject(e);
+        }
+    })
+}
+let editClinicService = (data) => {
+    console.log(data)
+    return new Promise(async (resolve, reject) => {
+        try {
+            let clinicEdit = await db.Clinic.findOne({
+                where: {
+                    id: data.id,
+                },
+                raw: false,
+            })
+            if (clinicEdit) {
+                clinicEdit.id = data.id;
+                clinicEdit.name = data.name;
+                clinicEdit.address = data.address;
+                clinicEdit.descriptionMarkdown = data.descriptionMarkdown;
+                clinicEdit.descriptionHTML = data.descriptionHTML;
+                clinicEdit.image = data.imageBase64;
 
+                await clinicEdit.save();
+                resolve({
+                    errCode: 0,
+                    errMessage: 'change success!'
+                })
+
+            }
+            else {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'clinic not exist!',
+                })
+            }
+        }
+        catch (e) {
+            reject(e);
+        }
+    })
+}
 module.exports = {
     createClinicService: createClinicService,
     getDetailClinicById: getDetailClinicById,
     getAllClinicService: getAllClinicService,
+    deleteClinicService: deleteClinicService,
+    editClinicService: editClinicService,
 }

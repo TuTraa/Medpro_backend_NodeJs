@@ -18,7 +18,21 @@ let getTopDoctorHome = async (req, res) => {
         })
     }
 }
-
+let findDoctor = async (req, res) => {
+    try {
+        let data = await doctorService.findDoctor(req.query);
+        return res.status(200).json({
+            data
+        })
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'error from server !'
+        })
+    }
+}
 let getAllDoctor = async (req, res) => {
     try {
         let response = await doctorService.getAllDoctorSevice();
@@ -280,5 +294,5 @@ module.exports = {
     getListPatientForDoctorS0, getListPatientForDoctorCancel,
     getListPatientForDoctorDone, getListPatientForDoctorNotCome,
     getListPatientForDoctorIsActive, getListPatientForDoctorChange,
-    bulkDeleteSchedule
+    bulkDeleteSchedule, findDoctor
 }

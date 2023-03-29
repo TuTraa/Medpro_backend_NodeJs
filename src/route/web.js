@@ -25,6 +25,7 @@ let initWebRoutes = (app) => {
 
   router.get("/api/allcode", userController.getAllCode);
   router.get("/api/top-doctor-home", doctorController.getTopDoctorHome);
+  router.get("/api/find-doctor", doctorController.findDoctor);
 
 
   router.get("/api/get-all-doctor", doctorController.getAllDoctor);
@@ -89,6 +90,8 @@ let initWebRoutes = (app) => {
   router.post("/api/create-new-clinic", clinicController.createClinic);
   router.get("/api/get-all-clinic", clinicController.getAllClinic);
   router.get("/api/get-detail-clinic", clinicController.getDetailClinicById);
+  router.post("/api/delete-clinic", clinicController.deleteClinic);
+  router.post("/api/edit-clinic", clinicController.editClinic);
 
   //paient get my emination
   router.get("/api/get-my-emination", patientController.getMyEmination);

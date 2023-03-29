@@ -1,5 +1,5 @@
 import db from "../models/index";
-import _ from "lodash";
+import _, { reject } from "lodash";
 import emailService from "../services/emailService";
 const { Op } = require('sequelize');
 import moment from 'moment/moment';
@@ -21,7 +21,18 @@ let getTopDoctorHome = limit => {
                 },
                 include: [
                     { model: db.Allcode, as: 'positionData', attributes: ['valueEn', 'valueVi'] },
-                    { model: db.Allcode, as: 'genderData', attributes: ['valueEn', 'valueVi'] }
+                    { model: db.Allcode, as: 'genderData', attributes: ['valueEn', 'valueVi'] },
+                    {
+                        model: db.doctorinfor,
+                        attributes: ['specialtyId'],
+                        include: [
+                            {
+                                model: db.Specialty,
+                                as: 'specialtyData',
+                                attributes: ['name']
+                            }
+                        ]
+                    }
                 ],
                 raw: true,
                 nest: true
@@ -37,6 +48,63 @@ let getTopDoctorHome = limit => {
         }
     })
 }
+
+let findDoctor = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            let doctor = '';
+            // if(data.nameFind){objectFind.}
+
+            if (data.province === 'All' && !data.specialty === 'All') {
+                doctor = await db.doctorinfor.findAll({
+                    attributes: ['id'],
+                    include: [
+                        {
+                            model: db.User, attributes: ['firstName', 'lastName', 'image', 'id'],
+                            include: [
+                                { model: db.Allcode, as: 'positionData', attributes: ['valueEn', 'valueVi'] },
+                            ]
+                        },
+                        { model: db.Specialty, as: 'specialtyData', attributes: ['name'] },
+                    ],
+                    raw: true,
+                    nest: true
+                });
+            }
+            else {
+                let objectFind = {};
+                if (data.province !== 'All') { objectFind.provinceId = data.province }
+                if (data.specialty !== 'All') { objectFind.specialtyId = data.specialty }
+                doctor = await db.doctorinfor.findAll({
+                    where: objectFind,
+                    attributes: ['clinicId'],
+                    include: [
+                        {
+                            model: db.User, attributes: ['firstName', 'lastName', 'image', 'id'],
+                            include: [
+                                { model: db.Allcode, as: 'positionData', attributes: ['valueEn', 'valueVi'] },
+                            ]
+                        },
+                        { model: db.Specialty, as: 'specialtyData', attributes: ['name'] },
+                    ],
+                    raw: true,
+                    nest: true
+                })
+            }
+
+            resolve({
+                errCode: 0,
+                errMessage: 'find doctor success!',
+                data: doctor
+            })
+        }
+        catch (e) {
+            reject(e)
+        }
+    })
+}
+
 let getAllDoctorSevice = () => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -632,5 +700,6 @@ module.exports = {
     getExtraInforDoctorById: getExtraInforDoctorById,
     getProfileDoctorById: getProfileDoctorById,
     getListPatientForDoctorService: getListPatientForDoctorService,
-    sendRemedy, getListPatientForDoctorServiceS0, bulkDeleteSchedule
+    sendRemedy, getListPatientForDoctorServiceS0, bulkDeleteSchedule,
+    findDoctor
 }
