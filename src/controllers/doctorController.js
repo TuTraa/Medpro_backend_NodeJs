@@ -173,7 +173,7 @@ let getListPatientForDoctor = async (req, res) => {
 }
 let getListPatientForDoctorS0 = async (req, res) => {
     try {
-        let data = await doctorService.getListPatientForDoctorServiceS0(req.query.doctorId, req.query.dataTime, "S0", req.query.phone);
+        let data = await doctorService.getListPatientForDoctorServiceS0(req.query.doctorId, req.query.dataTime, "S0", req.query.phone, 0);
         return res.status(200).json(
             data
         )
@@ -233,7 +233,7 @@ let getListPatientForDoctorNotCome = async (req, res) => {
 }
 let getListPatientForDoctorIsActive = async (req, res) => {
     try {
-        let data = await doctorService.getListPatientForDoctorServiceS0(req.query.doctorId, req.query.dataTime, "S2", req.query.phone);
+        let data = await doctorService.getListPatientForDoctorServiceS0(req.query.doctorId, req.query.dataTime, "S2", req.query.phone, 0);
         return res.status(200).json(
             data
         )

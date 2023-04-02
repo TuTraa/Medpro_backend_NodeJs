@@ -568,17 +568,21 @@ let getListPatientForDoctorServiceS0 = (doctorId, dataTime, statusId, phone, his
             }
             else {
                 let yesterday = moment(new Date()).add(-1, 'days').startOf('day').valueOf();
+
                 let today = moment(new Date()).startOf('day').valueOf();
                 let patient = '';
                 let objectFind = {
                     statusId: statusId,
-                    date: {
-                        [Op.gt]: yesterday,
-                    }
+
                 };
                 if (history) {
                     objectFind.date = {
                         [Op.lt]: today,
+                    }
+                }
+                if (!history) {
+                    objectFind.date = {
+                        [Op.gt]: yesterday,
                     }
                 }
                 if (dataTime !== 'All') {
