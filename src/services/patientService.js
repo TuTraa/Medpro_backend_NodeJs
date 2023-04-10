@@ -46,10 +46,10 @@ let postBookingApointment = (data) => {
                 });
 
                 if (user && user[0]) {
-                    await db.Booking.findOrCreate({
+                    let bookingFInd = await db.Booking.findOrCreate({
                         where: {
                             patientId: user[0].id,
-                            statusId: 'S2',
+                            statusId: 'S00',
                             doctorId: data.doctorId,
                         },
                         defaults: {
@@ -59,9 +59,17 @@ let postBookingApointment = (data) => {
                             date: data.dayTime,
                             timeType: data.timeType,
                             reason: data.reason,
+                            result: 'no data',
                             token: token
                         }
+
                     })
+                    if (bookingFInd[1] === false) {
+                        resolve({
+                            errCode: 3,
+                            errMessage: 'Appointment schedule already exists !',
+                        })
+                    }
                 }
                 resolve({
                     errCode: 0,
@@ -133,7 +141,7 @@ let getMyEminationService = (data) => {
                         {
                             model: db.Booking,
                             as: 'patientData',
-                            attributes: ['reason', 'date', 'timeType', 'statusId', 'id', 'pay'],
+                            attributes: ['reason', 'date', 'timeType', 'statusId', 'id', 'pay', 'result'],
                             include: [{
                                 model: db.User,
                                 as: 'doctorData',
@@ -228,6 +236,7 @@ let postImagePaied = (data) => {
 let postStatusId = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let result = '';
             if (!data || !data.id || !data.statusId) {
                 resolve({
                     errCode: 1,
@@ -235,6 +244,12 @@ let postStatusId = (data) => {
                 })
             }
             else {
+                if (data.statusId === 'S4') {
+                    result = 'cancel'
+                }
+                if (data.statusId === 'S5') {
+                    result = 'change'
+                }
                 let res = await db.Booking.findOne({
                     where: {
                         id: data.id
@@ -243,6 +258,7 @@ let postStatusId = (data) => {
                 })
                 if (res) {
                     res.statusId = data.statusId;
+                    res.result = result !== '' && result;
                     res.save();
                     resolve({
                         errCode: 0,

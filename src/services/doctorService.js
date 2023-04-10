@@ -694,6 +694,147 @@ let sendRemedy = (data) => {
     })
 }
 
+let sendResultService = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data || !data.id || !data.result) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing parameter !',
+                })
+            }
+            else {
+                let book = await db.Booking.findOne({
+                    where: {
+                        id: data.id,
+                    },
+                    raw: false,
+                })
+                if (book) {
+                    book.id = data.id;
+                    book.result = data.result;
+                    await book.save();
+                    resolve({
+                        errCode: 0,
+                        errMessage: 'send result success!',
+                    })
+                }
+            }
+        }
+        catch (e) {
+            reject(e);
+        }
+    })
+}
+
+
+let notifyDoctor = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.doctorId || !data.result || !data.statusId) {
+                resolve({
+                    errCode: -1,
+                    errMessage: 'missing parameter',
+                })
+            }
+            else {
+                let objFind = {};
+                if (data.doctorId === 'All') {
+                    objFind = {
+                        statusId: data.statusId,
+                        result: data.result
+                    }
+                }
+                else {
+                    objFind = {
+                        doctorId: data.doctorId,
+                        statusId: data.statusId,
+                        result: data.result
+                    }
+                }
+                let allNotify = await db.Booking.findAll({
+                    where: objFind
+                    ,
+                    include: [{
+                        model: db.User,
+                        as: 'patientData',
+                        attributes: ['firstName', 'email', 'address', 'gender', 'phoneNumber'],
+                        include: [{
+                            model: db.Allcode,
+                            as: 'genderData',
+                            attributes: ['valueVi', 'valueEn']
+                        }]
+                    }, {
+                        model: db.Allcode,
+                        as: 'timeTypeDataPatient',
+                        attributes: ['valueVi', 'valueEn']
+                    }
+                    ],
+                    raw: false,
+                    nest: true,
+
+                })
+                if (allNotify) {
+                    resolve({
+                        errCode: 0,
+                        errMessage: 'get notify doctor Success!',
+                        allNotify: allNotify,
+                    })
+                }
+                else {
+                    resolve({
+                        errCode: 1,
+                        errMessage: 'no data notify!',
+                    })
+                }
+            }
+        }
+        catch (e) {
+            reject(e);
+        }
+    })
+}
+let checkedNotify = (bookingId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!bookingId) {
+                resolve({
+                    errCode: -1,
+                    errMessage: 'missing parameter',
+                })
+            }
+            else {
+
+                let bookRes = await db.Booking.findOne({
+                    where: {
+                        id: bookingId,
+                    }, raw: false
+
+
+                })
+                if (bookRes) {
+                    bookRes.id = bookingId;
+                    bookRes.result = 'wait for the doctor';
+                    bookRes.save();
+                    resolve({
+                        errCode: 0,
+                        errMessage: 'checked success!'
+                    })
+                }
+                else {
+                    resolve({
+                        errCode: 1,
+                        errMessage: 'this booking not exist!',
+                    })
+                }
+            }
+        }
+        catch (e) {
+            reject(e);
+        }
+    })
+}
+
 module.exports = {
     getTopDoctorHome: getTopDoctorHome,
     getAllDoctorSevice: getAllDoctorSevice,
@@ -705,5 +846,5 @@ module.exports = {
     getProfileDoctorById: getProfileDoctorById,
     getListPatientForDoctorService: getListPatientForDoctorService,
     sendRemedy, getListPatientForDoctorServiceS0, bulkDeleteSchedule,
-    findDoctor
+    findDoctor, sendResultService, notifyDoctor, checkedNotify
 }

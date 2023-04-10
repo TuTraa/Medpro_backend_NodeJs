@@ -257,12 +257,26 @@ let getListPatientForDoctorChange = async (req, res) => {
         console.log(e);
         return res.status(200).json({
             errCode: -1,
-            message: 'error from server'
+            message: 'error from server !'
         })
     }
 }
 
-
+let sendResult = async (req, res) => {
+    try {
+        let data = await doctorService.sendResultService(req.body);
+        return res.status(200).json(
+            data
+        )
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'error from server !'
+        })
+    }
+}
 //send email then finish 
 let sendRemedy = async (req, res) => {
     try {
@@ -281,6 +295,42 @@ let sendRemedy = async (req, res) => {
 
 }
 
+
+let notifyDoctor = async (req, res) => {
+    try {
+        let data = await doctorService.notifyDoctor(req.query);
+        return res.status(200).json(
+            data
+        )
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+let checkedNotify = async (req, res) => {
+    try {
+        let data = await doctorService.checkedNotify(req.body.bookingId);
+        return res.status(200).json(
+            data
+        )
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+
+}
+
+
+
+
 module.exports = {
     getTopDoctorHome: getTopDoctorHome,
     getAllDoctor: getAllDoctor,
@@ -294,5 +344,6 @@ module.exports = {
     getListPatientForDoctorS0, getListPatientForDoctorCancel,
     getListPatientForDoctorDone, getListPatientForDoctorNotCome,
     getListPatientForDoctorIsActive, getListPatientForDoctorChange,
-    bulkDeleteSchedule, findDoctor
+    bulkDeleteSchedule, findDoctor, sendResult, notifyDoctor,
+    checkedNotify
 }

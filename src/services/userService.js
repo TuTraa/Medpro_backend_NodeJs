@@ -139,6 +139,7 @@ let deleteUser = (userId) => {
   return new Promise(async (resolve, reject) => {
     let user = await db.User.findOne({
       where: { id: userId },
+      raw: false,
     });
     if (!user) {
       resolve({
@@ -146,9 +147,17 @@ let deleteUser = (userId) => {
         errMessage: " the user isn't exist",
       });
     } else {
-      await db.User.destroy({
-        where: { id: userId },
-      });
+      if (user.roleId === 'R2') {
+        user.id = userId;
+        user.roleId = 'R3';
+        await user.save();
+      }
+      else {
+        await db.User.destroy({
+          where: { id: userId },
+        });
+      }
+
       resolve({
         errCode: 0,
         errMessage: "Deleted",

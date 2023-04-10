@@ -76,7 +76,8 @@ let initWebRoutes = (app) => {
 
 
 
-  router.post("/api/send-remedy", doctorController.sendRemedy)
+  router.post("/api/send-remedy", doctorController.sendRemedy);
+  router.post("/api/send-result", doctorController.sendResult);
 
   //apopointment
 
@@ -99,6 +100,11 @@ let initWebRoutes = (app) => {
   router.post("/api/post-image-paied", patientController.postImagePaied);
 
   router.post("/api/post-statusId", patientController.handleStatusId);
+
+  //notidy doctor
+  router.get("/api/get-notify-doctor", doctorController.notifyDoctor);
+
+  router.post("/api/post-checked-notify", doctorController.checkedNotify);
 
   return app.use("/", router);
 };

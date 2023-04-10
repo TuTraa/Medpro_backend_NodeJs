@@ -32,6 +32,9 @@ module.exports = {
       pay: {
         type: Sequelize.BOOLEAN,
       },
+      result: {
+        type: Sequelize.STRING,
+      },
       image: {
         type: Sequelize.BLOB("long"),
       },

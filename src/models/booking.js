@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       reason: DataTypes.STRING,
       token: DataTypes.STRING,
       pay: DataTypes.BOOLEAN,
+      result: DataTypes.STRING,
       image: DataTypes.STRING,
     },
     {
