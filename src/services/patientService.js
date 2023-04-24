@@ -250,6 +250,9 @@ let postStatusId = (data) => {
                 if (data.statusId === 'S5') {
                     result = 'change'
                 }
+                if (data.statusId === 'S2') {
+                    result = 'no data'
+                }
                 let res = await db.Booking.findOne({
                     where: {
                         id: data.id
