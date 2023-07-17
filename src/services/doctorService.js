@@ -393,6 +393,7 @@ let getScheduleByDate = (doctorId, date) => {
                     raw: false,
                     nest: true,
                 })
+                // console.log("data")
                 if (!data) { data = [] }
                 resolve({
                     errCode: 0,
